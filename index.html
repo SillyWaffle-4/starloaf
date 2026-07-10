@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Starloaf Typing Studio</title>
     <style>
-        /* 1. Custom Font Integration */
+        /* 1. Custom Font Integration - Double check your file name matches this exactly! */
         @font-face {
             font-family: 'Starloaf';
             src: url('starloaf-Regular.ttf') format('truetype');
@@ -147,7 +147,7 @@
 
         /* Custom Font Interface Spaces */
         .font-preview {
-            font-family: 'Starloaf', sans-serif;
+            font-family: 'Starloaf', sans-serif !important;
         }
 
         #target-text {
@@ -256,6 +256,7 @@
 
         <textarea 
             id="input-text" 
+            class="font-preview"
             placeholder="start typing here to begin the test..."
             autocomplete="off" 
             autocorrect="off" 
@@ -275,7 +276,7 @@
             "hello there! are you here working on this creative design? it looks like a wonderful day to build something cool and see how nicely your custom handwriting types out."
         ];
 
-        let currentMode = 'test'; // 'test' or 'chill'
+        let currentMode = 'test';
         let selectedDuration = 15;
         let timeLeft = selectedDuration;
         let startTime = null;
@@ -291,7 +292,6 @@
         const wpmContainer = document.getElementById('wpm-container');
         const refreshBtn = document.getElementById('btn-refresh');
 
-        // Swap between Infinite Sandbox Sandbox and Standard Metrified Tests
         function switchMode(mode) {
             currentMode = mode;
             document.getElementById('btn-mode-test').classList.remove('active');
@@ -390,12 +390,10 @@
         inputArea.addEventListener('input', (e) => {
             if (currentMode === 'test' && timeLeft <= 0) return;
 
-            // Lowercase enforcement rule engine
             const cursorPosition = inputArea.selectionStart;
             inputArea.value = inputArea.value.toLowerCase();
             inputArea.setSelectionRange(cursorPosition, cursorPosition);
 
-            // Clock trigger mechanism initialization
             if (!startTime && inputArea.value.length > 0) {
                 startTime = Date.now();
                 if (currentMode === 'test') {
