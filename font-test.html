@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starloaf Typing Test</title>
+    <style>
+        /* 1. Pointing exactly to your font file name */
+        @font-face {
+            font-family: 'Starloaf';
+            src: url('starloaf-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* 2. Page reset and styling */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #1e1e2e; /* Sleek dark mode background */
+            color: #cdd6f4;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: #252538;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #cba6f7;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Controls Layout (Timer settings and Live Stats) */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background: #181825;
+            padding: 12px 20px;
+            border-radius: 12px;
+        }
+
+        /* Time Selection Buttons */
+        .time-selector {
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-btn {
+            background: #313244;
+            color: #bac2de;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .time-btn:hover {
+            background: #45475a;
+            color: #cdd6f4;
+        }
+
+        .time-btn.active {
+            background: #cba6f7;
+            color: #1e1e2e;
+        }
+
+        /* Live Badges for Stats */
+        .stat-badges {
+            display: flex;
+            gap: 15px;
+            font-weight: bold;
+            font-size: 1.05rem;
+        }
+
+        .badge-timer {
+            color: #f38ba8;
+        }
+
+        .badge-wpm {
+            color: #a6e3a1;
+        }
+
+        /* Target Paragraph Box */
+        #target-text {
+            font-family: 'Starloaf', sans-serif;
+            font-size: 32px;
+            line-height: 1.6;
+            text-align: left;
+            margin-bottom: 25px;
+            color: #bac2de;
+            background: #181825;
+            padding: 20px;
+            border-radius: 12px;
+            min-height: 140px;
+            user-select: none;
+        }
+
+        /* Interactive Custom Input Area */
+        textarea {
+            font-family: 'Starloaf', sans-serif;
+            width: 100%;
+            height: 180px;
+            padding: 20px;
+            font-size: 32px;
+            line-height: 1.6;
+            background-color: #181825;
+            color: #a6e3a1;
+            border: 2px solid #313244;
+            border-radius: 12px;
+            resize: none;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        textarea:focus {
+            border-color: #cba6f7;
+        }
+
+        textarea:disabled {
+            border-color: #f38ba8;
+            color: #f38ba8;
+            cursor: not-allowed;
+        }
+
+        textarea::placeholder {
+            color: #585b70;
+        }
+
+        /* Restart button styling */
+        .btn-restart {
+            margin-top: 25px;
+            background: #313244;
+            color: #cdd6f4;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s ease;
+        }
+
+        .btn-restart:hover {
+            background: #45475a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>starloaf typing test</h1>
+        </header>
+
+        <div class="controls">
+            <div class="time-selector">
+                <button class="time-btn" onclick="setDuration(10)">10s</button>
+                <button class="time-btn active" onclick="setDuration(15)">15s</button>
+                <button class="time-btn" onclick="setDuration(20)">20s</button>
+                <button class="time-btn" onclick="setDuration(30)">30s</button>
+            </div>
+            <div class="stat-badges">
+                <div class="badge-timer">time: <span id="timer">15</span>s</div>
+                <div class="badge-wpm">wpm: <span id="wpm">0</span></div>
+            </div>
+        </div>
+
+        <div id="target-text">loading text...</div>
+
+        <textarea 
+            id="input-text" 
+            placeholder="start typing here to begin the test..."
+            autocomplete="off" 
+            autocorrect="off" 
+            autocapitalize="off" 
+            spellcheck="false"
+        ></textarea>
+
+        <button class="btn-restart" onclick="initTest()">next paragraph</button>
+    </div>
+
+    <script>
+        const paragraphs = [
+            "chicken and waffles make a fantastic lunch on a lazy sunday afternoon. a cool breeze blew through the windows while we sat around laughing and talking about everything.",
+            "the quick brown fox jumps right over the lazy dog. please check the font closely to see if any of your letter shapes overlapping or running off the screen guidelines.",
+            "hello there! are you here working on this creative design? it looks like a wonderful day to build something cool and see how nicely your custom handwriting types out."
+        ];
+
+        let selectedDuration = 15; // default test duration
+        let timeLeft = selectedDuration;
+        let startTime = null;
+        let countdownInterval = null;
+        let testActive = false;
+
+        const targetDisplay = document.getElementById('target-text');
+        const inputArea = document.getElementById('input-text');
+        const wpmDisplay = document.getElementById('wpm');
+        const timerDisplay = document.getElementById('timer');
+
+        // Change test duration time limit
+        function setDuration(seconds) {
+            if (testActive && inputArea.value.length > 0) return; // Prevent changing mid-test
+            selectedDuration = seconds;
+            
+            // Toggle active styling class on buttons
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseInt(btn.innerText) === seconds) {
+                    btn.classList.add('active');
+                }
+            });
+            initTest();
+        }
+
+        // Start or reset a brand new typing test run
+        function initTest() {
+            clearInterval(countdownInterval);
+            startTime = null;
+            testActive = false;
+            timeLeft = selectedDuration;
+            
+            timerDisplay.innerText = timeLeft;
+            wpmDisplay.innerText = "0";
+            inputArea.value = "";
+            inputArea.disabled = false;
+            inputArea.placeholder = "start typing here to begin the test...";
+            
+            // Grab a random paragraph
+            const randomIndex = Math.floor(Math.random() * paragraphs.length);
+            targetDisplay.innerText = paragraphs[randomIndex];
+        }
+
+        // Countdown ticking handler
+        function tick() {
+            timeLeft--;
+            timerDisplay.innerText = timeLeft;
+            
+            // Calculate and show current runtime score
+            calculateWPM();
+
+            if (timeLeft <= 0) {
+                endTest();
+            }
+        }
+
+        // Continuous runtime WPM calculator
+        function calculateWPM() {
+            if (!startTime) return;
+            
+            // Determine time elapsed based on whether the test has completed or is running
+            let timeElapsed;
+            if (timeLeft <= 0) {
+                timeElapsed = selectedDuration / 60; // Use entire selected window if finished
+            } else {
+                timeElapsed = (Date.now() - startTime) / 1000 / 60; // Current run duration in minutes
+            }
+            
+            const typedText = inputArea.value;
+            
+            if (typedText.length === 0 || timeElapsed === 0) {
+                wpmDisplay.innerText = "0";
+                return;
+            }
+
+            // Standardized typing metrics formula: 5 keystrokes = 1 word
+            const wordsTyped = typedText.length / 5;
+            const currentWPM = Math.round(wordsTyped / timeElapsed);
+            
+            wpmDisplay.innerText = currentWPM;
+        }
+
+        // Clean finish handling
+        function endTest() {
+            clearInterval(countdownInterval);
+            testActive = false;
+            inputArea.disabled = true;
+            inputArea.placeholder = "test finished!";
+            // Ensure final partial characters are processed against the absolute timeline
+            calculateWPM();
+        }
+
+        // Intercept typing behaviors to track timeline and formatting styles
+        inputArea.addEventListener('input', (e) => {
+            if (timeLeft <= 0) return;
+
+            // Instantly force character input stream to lower case rules
+            const cursorPosition = inputArea.selectionStart;
+            inputArea.value = inputArea.value.toLowerCase();
+            inputArea.setSelectionRange(cursorPosition, cursorPosition);
+
+            // Trigger configuration timers upon typing the initial character
+            if (!startTime && inputArea.value.length > 0) {
+                testActive = true;
+                startTime = Date.now();
+                countdownInterval = setInterval(tick, 1000);
+            }
+
+            calculateWPM();
+        });
+
+        // Initialize setup variables on launch
+        initTest();
+    </script>
+
+</body>
+</html>
