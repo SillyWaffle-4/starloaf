@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Starloaf Typing Test</title>
+    <title>Starloaf Typing Studio</title>
     <style>
-        /* 1. Pointing exactly to your font file name */
+        /* 1. Custom Font Integration */
         @font-face {
             font-family: 'Starloaf';
             src: url('starloaf-Regular.ttf') format('truetype');
@@ -13,7 +13,7 @@
             font-style: normal;
         }
 
-        /* 2. Page reset and styling */
+        /* 2. Global Aesthetic Reset */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -22,7 +22,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #1e1e2e; /* Sleek dark mode background */
+            background-color: #11111b; /* Rich slate dark background */
             color: #cdd6f4;
             min-height: 100vh;
             display: flex;
@@ -31,53 +31,82 @@
             padding: 20px;
         }
 
+        /* 3. Main Glassmorphism UI Container */
         .container {
             width: 100%;
-            max-width: 750px;
-            background: #252538;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            background: #181825;
+            padding: 45px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
             text-align: center;
+            transition: all 0.3s ease;
         }
 
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 35px;
+            border-bottom: 1px solid #313244;
+            padding-bottom: 20px;
         }
 
         h1 {
-            font-size: 1.5rem;
-            color: #cba6f7;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            font-size: 1.6rem;
+            color: #cba6f7; /* Vibrant pastel purple */
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
-        /* Controls Layout (Timer settings and Live Stats) */
-        .controls {
+        /* Mode & Setting Bars */
+        .toolbar {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-            background: #181825;
-            padding: 12px 20px;
-            border-radius: 12px;
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
-        /* Time Selection Buttons */
+        .mode-toggle {
+            display: flex;
+            background: #1e1e2e;
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid #313244;
+        }
+
+        .mode-btn {
+            background: transparent;
+            color: #7f849c;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .mode-btn.active {
+            background: #cba6f7;
+            color: #11111b;
+        }
+
         .time-selector {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
         }
 
         .time-btn {
-            background: #313244;
+            background: #1e1e2e;
             color: #bac2de;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
+            border: 1px solid #313244;
+            padding: 6px 14px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
             font-size: 0.85rem;
@@ -85,70 +114,82 @@
         }
 
         .time-btn:hover {
-            background: #45475a;
-            color: #cdd6f4;
+            background: #313244;
+            border-color: #45475a;
         }
 
         .time-btn.active {
-            background: #cba6f7;
-            color: #1e1e2e;
+            background: rgba(203, 166, 247, 0.15);
+            color: #cba6f7;
+            border-color: #cba6f7;
         }
 
-        /* Live Badges for Stats */
-        .stat-badges {
+        /* Dashboard Readouts */
+        .dashboard {
             display: flex;
             gap: 15px;
             font-weight: bold;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
         }
 
-        .badge-timer {
-            color: #f38ba8;
+        .badge {
+            background: #1e1e2e;
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: 1px solid #313244;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .badge-wpm {
-            color: #a6e3a1;
-        }
+        #timer-container { color: #f38ba8; }
+        #wpm-container { color: #a6e3a1; }
 
-        /* Target Paragraph Box */
-        #target-text {
+        /* Custom Font Interface Spaces */
+        .font-preview {
             font-family: 'Starloaf', sans-serif;
-            font-size: 32px;
-            line-height: 1.6;
+        }
+
+        #target-text {
+            font-size: 36px;
+            line-height: 1.5;
             text-align: left;
             margin-bottom: 25px;
-            color: #bac2de;
-            background: #181825;
-            padding: 20px;
-            border-radius: 12px;
+            color: #9399b2;
+            background: #11111b;
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid #1e1e2e;
             min-height: 140px;
             user-select: none;
+            transition: all 0.3s ease;
         }
 
-        /* Interactive Custom Input Area */
         textarea {
-            font-family: 'Starloaf', sans-serif;
             width: 100%;
-            height: 180px;
-            padding: 20px;
-            font-size: 32px;
-            line-height: 1.6;
-            background-color: #181825;
+            height: 220px;
+            padding: 25px;
+            font-size: 36px;
+            line-height: 1.5;
+            background-color: #11111b;
             color: #a6e3a1;
-            border: 2px solid #313244;
-            border-radius: 12px;
+            border: 2px solid #1e1e2e;
+            border-radius: 16px;
             resize: none;
             outline: none;
-            transition: border-color 0.2s ease;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         textarea:focus {
             border-color: #cba6f7;
+            box-shadow: 0 0 0 4px rgba(203, 166, 247, 0.15), inset 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         textarea:disabled {
             border-color: #f38ba8;
             color: #f38ba8;
+            opacity: 0.6;
             cursor: not-allowed;
         }
 
@@ -156,22 +197,34 @@
             color: #585b70;
         }
 
-        /* Restart button styling */
-        .btn-restart {
-            margin-top: 25px;
-            background: #313244;
-            color: #cdd6f4;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: background 0.2s ease;
+        /* Control Action Buttons */
+        .actions-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
         }
 
-        .btn-restart:hover {
-            background: #45475a;
+        .btn-action {
+            background: #1e1e2e;
+            color: #cdd6f4;
+            border: 1px solid #313244;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            background: #313244;
+            border-color: #45475a;
+            transform: translateY(-1px);
+        }
+
+        .btn-action:active {
+            transform: translateY(1px);
         }
     </style>
 </head>
@@ -179,23 +232,27 @@
 
     <div class="container">
         <header>
-            <h1>starloaf typing test</h1>
+            <h1>starloaf typing studio</h1>
+            <div class="mode-toggle">
+                <button id="btn-mode-test" class="mode-btn active" onclick="switchMode('test')">test mode</button>
+                <button id="btn-mode-chill" class="mode-btn" onclick="switchMode('chill')">chill mode</button>
+            </div>
         </header>
 
-        <div class="controls">
-            <div class="time-selector">
+        <div class="toolbar">
+            <div class="time-selector" id="time-selector">
                 <button class="time-btn" onclick="setDuration(10)">10s</button>
                 <button class="time-btn active" onclick="setDuration(15)">15s</button>
                 <button class="time-btn" onclick="setDuration(20)">20s</button>
                 <button class="time-btn" onclick="setDuration(30)">30s</button>
             </div>
-            <div class="stat-badges">
-                <div class="badge-timer">time: <span id="timer">15</span>s</div>
-                <div class="badge-wpm">wpm: <span id="wpm">0</span></div>
+            <div class="dashboard">
+                <div class="badge" id="timer-container">time: <span id="timer">15</span>s</div>
+                <div class="badge" id="wpm-container">wpm: <span id="wpm">0</span></div>
             </div>
         </div>
 
-        <div id="target-text">loading text...</div>
+        <div id="target-text" class="font-preview">loading text...</div>
 
         <textarea 
             id="input-text" 
@@ -206,7 +263,9 @@
             spellcheck="false"
         ></textarea>
 
-        <button class="btn-restart" onclick="initTest()">next paragraph</button>
+        <div class="actions-bar">
+            <button id="btn-refresh" class="btn-action" onclick="initTest()">next paragraph</button>
+        </div>
     </div>
 
     <script>
@@ -216,7 +275,8 @@
             "hello there! are you here working on this creative design? it looks like a wonderful day to build something cool and see how nicely your custom handwriting types out."
         ];
 
-        let selectedDuration = 15; // default test duration
+        let currentMode = 'test'; // 'test' or 'chill'
+        let selectedDuration = 15;
         let timeLeft = selectedDuration;
         let startTime = null;
         let countdownInterval = null;
@@ -226,13 +286,39 @@
         const inputArea = document.getElementById('input-text');
         const wpmDisplay = document.getElementById('wpm');
         const timerDisplay = document.getElementById('timer');
+        const timeSelector = document.getElementById('time-selector');
+        const timerContainer = document.getElementById('timer-container');
+        const wpmContainer = document.getElementById('wpm-container');
+        const refreshBtn = document.getElementById('btn-refresh');
 
-        // Change test duration time limit
+        // Swap between Infinite Sandbox Sandbox and Standard Metrified Tests
+        function switchMode(mode) {
+            currentMode = mode;
+            document.getElementById('btn-mode-test').classList.remove('active');
+            document.getElementById('btn-mode-chill').classList.remove('active');
+            
+            if (mode === 'test') {
+                document.getElementById('btn-mode-test').classList.add('active');
+                timeSelector.style.opacity = "1";
+                timeSelector.style.visibility = "visible";
+                timerContainer.style.display = "flex";
+                targetDisplay.style.display = "block";
+                refreshBtn.style.display = "block";
+            } else {
+                document.getElementById('btn-mode-chill').classList.add('active');
+                timeSelector.style.opacity = "0";
+                timeSelector.style.visibility = "hidden";
+                timerContainer.style.display = "none";
+                targetDisplay.style.display = "none";
+                refreshBtn.style.display = "none";
+            }
+            initTest();
+        }
+
         function setDuration(seconds) {
-            if (testActive && inputArea.value.length > 0) return; // Prevent changing mid-test
+            if (testActive && inputArea.value.length > 0) return;
             selectedDuration = seconds;
             
-            // Toggle active styling class on buttons
             document.querySelectorAll('.time-btn').forEach(btn => {
                 btn.classList.remove('active');
                 if (parseInt(btn.innerText) === seconds) {
@@ -242,7 +328,6 @@
             initTest();
         }
 
-        // Start or reset a brand new typing test run
         function initTest() {
             clearInterval(countdownInterval);
             startTime = null;
@@ -253,19 +338,19 @@
             wpmDisplay.innerText = "0";
             inputArea.value = "";
             inputArea.disabled = false;
-            inputArea.placeholder = "start typing here to begin the test...";
             
-            // Grab a random paragraph
-            const randomIndex = Math.floor(Math.random() * paragraphs.length);
-            targetDisplay.innerText = paragraphs[randomIndex];
+            if (currentMode === 'test') {
+                inputArea.placeholder = "start typing here to begin the test...";
+                const randomIndex = Math.floor(Math.random() * paragraphs.length);
+                targetDisplay.innerText = paragraphs[randomIndex];
+            } else {
+                inputArea.placeholder = "chill mode active. type whatever you want here completely free...";
+            }
         }
 
-        // Countdown ticking handler
         function tick() {
             timeLeft--;
             timerDisplay.innerText = timeLeft;
-            
-            // Calculate and show current runtime score
             calculateWPM();
 
             if (timeLeft <= 0) {
@@ -273,62 +358,57 @@
             }
         }
 
-        // Continuous runtime WPM calculator
         function calculateWPM() {
             if (!startTime) return;
             
-            // Determine time elapsed based on whether the test has completed or is running
             let timeElapsed;
-            if (timeLeft <= 0) {
-                timeElapsed = selectedDuration / 60; // Use entire selected window if finished
+            if (currentMode === 'test' && timeLeft <= 0) {
+                timeElapsed = selectedDuration / 60;
             } else {
-                timeElapsed = (Date.now() - startTime) / 1000 / 60; // Current run duration in minutes
+                timeElapsed = (Date.now() - startTime) / 1000 / 60;
             }
             
             const typedText = inputArea.value;
-            
             if (typedText.length === 0 || timeElapsed === 0) {
                 wpmDisplay.innerText = "0";
                 return;
             }
 
-            // Standardized typing metrics formula: 5 keystrokes = 1 word
             const wordsTyped = typedText.length / 5;
             const currentWPM = Math.round(wordsTyped / timeElapsed);
-            
             wpmDisplay.innerText = currentWPM;
         }
 
-        // Clean finish handling
         function endTest() {
             clearInterval(countdownInterval);
             testActive = false;
             inputArea.disabled = true;
             inputArea.placeholder = "test finished!";
-            // Ensure final partial characters are processed against the absolute timeline
             calculateWPM();
         }
 
-        // Intercept typing behaviors to track timeline and formatting styles
         inputArea.addEventListener('input', (e) => {
-            if (timeLeft <= 0) return;
+            if (currentMode === 'test' && timeLeft <= 0) return;
 
-            // Instantly force character input stream to lower case rules
+            // Lowercase enforcement rule engine
             const cursorPosition = inputArea.selectionStart;
             inputArea.value = inputArea.value.toLowerCase();
             inputArea.setSelectionRange(cursorPosition, cursorPosition);
 
-            // Trigger configuration timers upon typing the initial character
+            // Clock trigger mechanism initialization
             if (!startTime && inputArea.value.length > 0) {
-                testActive = true;
                 startTime = Date.now();
-                countdownInterval = setInterval(tick, 1000);
+                if (currentMode === 'test') {
+                    testActive = true;
+                    countdownInterval = setInterval(tick, 1000);
+                } else {
+                    countdownInterval = setInterval(calculateWPM, 1000);
+                }
             }
 
             calculateWPM();
         });
 
-        // Initialize setup variables on launch
         initTest();
     </script>
 
